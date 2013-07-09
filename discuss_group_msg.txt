@@ -1,0 +1,49 @@
+/*========================0x2a/0x53(讨论组消息)===============================
+                  GroupMsgRecord = dwGroupUin + cConfType + dwConfUin + dwFromUin + dwMsgSeq + dwMsgTime + dwInfoSeq + content
+                  <
+                      content = {
+                          switch stMsgInfo.wMsgType
+                          0x2a : shLen + M_ConfMsgHead + sMsg[ shLen - sizeof(M_ConfMsgHead) ]
+                          0x53 : shLen + M_ConfMsgHead + UniMsgHead + wFontNameLen + sFontName[ wFontNameLen ] + \ 
+                                  wTempLen + sTemp[ wTempLen ] + hummerTLV
+                      <
+                           #offsetof()表示当前元素距离包起始字节的偏移
+                           #elem{...} 表示整个body的剩余字节里存放的都是elem，具体个数由剩余字节数决定
+                          hummerTLV = elem{ RelayPkgHead.wLen - offsetof() - 1 }
+                          <
+                               #attr{ wLen }的花括号表示: attr的个数为 wLen 个字节里能存放的attr的个数
+                               elem = ucType + wLen + attr{ wLen }
+                               <
+                                   attr = ucType + wLen + sValue[ wLen ]
+                               >
+                           >
+                      >
+                  >
+                   
+                  相关结构体定义：
+                   
+                  typedef struct
+                  {
+                      char cMagicM;
+                      char cMagicS;
+                      char cMagicG;
+                      char cVer;
+                      char sCodePage[4];
+                      char sTime[4];
+                      char sRandom[4];
+                      char sColor[4];
+                      char cTextSize;
+                      char cTextFormat;
+                      char cCharSet; 
+                      char cPitchAndFamily;
+                  }UniMsgHead;
+                          
+                  typedef struct
+                  {
+                      char sCmdType[2];//消息类型
+                      char cTotalPkg;//本条消息一共有多少个分包，如果为1表示此消息没有分包
+                      char cCurPkg;//此分包的序号
+                      char sPkgSeq[2];//标识分包的消息
+                      char sDirtyCode[4];//危险URL的ID
+                  } M_ConfMsgHead;
+         */
